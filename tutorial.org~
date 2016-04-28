@@ -1,0 +1,18 @@
+* Introdução
+Neste tutorial faremos um blog usando o Yesod Frameword.
+Yesod é um framework web Haskell para o desenvolvimento produtivo de, RESTful, aplicações web de tipo
+seguro e de alta performance.
+** Começando..
+*** Pacotes a serem instalados
+psql (postgres)
+stack
+yesod
+yesod-bin
+** Criando um novo projeto
+Dado que o psql e o stack foi devidamente instalado, criamos um novo projeto usando o Stack, cuja
+a sintaxe é /stack new <project name> <template>/.
+Para esse caso:
+- /stack new myBlog yesod-sqlite && cd myBlog/
+Para construir as bibliotecas
+- /stack exec -- yesod devel/
+Agora você pode testar sua aplicação em http://localhost:3000/
