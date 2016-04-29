@@ -1,0 +1,222 @@
+% Created 2016-04-28 Thu 18:23
+\documentclass[11pt]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{George Lukas}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={George Lukas},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 24.5.1 (Org mode 8.3.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+\section{Introdução}
+\label{sec:orgheadline6}
+\begin{verse}
+Neste tutorial faremos um blog usando o Yesod Frameword.\\
+Yesod é um framework web Haskell para o desenvolvimento produtivo de, RESTful, aplicação web de tipo\\
+seguro e de alta performance.\\
+\end{verse}
+
+\subsection{Começando..}
+\label{sec:orgheadline2}
+\subsubsection{Pacotes a serem instalados}
+\label{sec:orgheadline1}
+\begin{itemize}
+\item psql (postgres)
+\item stack
+\item yesod
+\item yesod-bin
+\end{itemize}
+\subsection{Criando um novo projeto}
+\label{sec:orgheadline3}
+\begin{verse}
+Dado que o psql e o stack foi devidamente instalado, criamos um novo projeto usando o Stack, cuja a\\
+sintaxe é \emph{stack new <project name> <template>}.\\
+Para esse caso:\\
+\end{verse}
+\begin{itemize}
+\item \emph{stack new myBlog yesod-sqlite \&\& cd myBlog}
+\end{itemize}
+
+\begin{verse}
+Para construir as bibliotecas\\
+\end{verse}
+\begin{itemize}
+\item \emph{stack exec -- yesod devel}
+\end{itemize}
+
+\begin{quote}
+Agora você pode testar sua aplicaçando em \url{http://localhost:3000/} \\
+Após isso, criamos uma sandbox para nosso projeto usando o Cabal: 
+\end{quote}
+\begin{itemize}
+\item \emph{cabal sandbox init}
+\end{itemize}
+
+\begin{quote}
+Agora instalamos apenas as dependencias necessárias para nossa aplicação:
+\end{quote}
+
+\begin{itemize}
+\item \emph{cabal install --only-dependencies}
+\end{itemize}
+
+\begin{quote}
+Em seguida podemos criar nossa aplicação e testá-la:
+\end{quote}
+
+\begin{itemize}
+\item \emph{cabal build}
+\item \emph{yesod-devel}
+\end{itemize}
+
+\subsection{Criando Rotas}
+\label{sec:orgheadline4}
+
+\begin{quote}
+Antes de irmos a frente, criamos um novo git repo.\\
+\end{quote}
+
+\begin{itemize}
+\item \emph{git init}
+\item \emph{git add .}
+\item \emph{git commit -m "myBlog" .}
+\end{itemize}
+
+\begin{quote}
+Agora estamos prontos para seguir em frente.\\
+A primeira coisa que temos que fazer para uma aplicação de blog, é uma página que nos permita criar blog posts.\\
+Uma página que nos permita criar amostras de dados e ver como o yesod cria rotas. Não faremos tudo na mão,\\
+então no terminal:
+\end{quote}
+
+\begin{itemize}
+\item \emph{yesod add-handler}
+\end{itemize}
+
+\begin{quote}
+Isto abrirá um menu, para esse caso respondemos:
+\end{quote}
+
+\begin{itemize}
+\item PostNew
+\item /post/new
+\item GET
+\end{itemize}
+
+\begin{quote}
+Podemos ver que houve algumas mudanças com o comando:\\
+\begin{itemize}
+\item \emph{git status}
+\end{itemize}
+\end{quote}
+
+\begin{quote}
+Agora estamos prontos para continuar com este Handler.\\
+Handler/PostNew.hs e editamos o que está lá para:
+\end{quote}
+
+\begin{verbatim}
+module Handler.PostNew where
+
+import Import
+
+getPostNewR :: Handler Html
+getPostNewR = do
+  defaultLayout $ do
+    $(widgetFile "posts/new")
+\end{verbatim}
+
+\begin{quote}
+Em seguida criaremos uma nova página, um template. Criamos uma nova pasta dentro de templates.\\
+templates/posts. A seguir criamos um documento em equivalente ao html, o hamlet.\\
+\textbf{new.hamlet}\\
+Para testarmos, editamos para:
+\end{quote}
+
+\begin{verbatim}
+<h1> Create a post!
+\end{verbatim}
+
+Interprete o Handler e pode-se testar no browser.
+\url{http://localhost:3000/posts/new}
+
+"Insert copyright statement here" não é necessáriamente requerido. Isso vem da função \emph{defaultLayout}
+que chama o dafault-layout-wrapper.hamlet e lá há um campo que está especificado o seguinte:
+
+\begin{verbatim}
+<body>
+   <div class="container">
+     <header>
+     <div id="main" role="main">
+       ^{pageBody pc}
+     <footer>
+       #{appCopyright $ appSettings master}
+\end{verbatim}
+
+Então é só apagar a seguinte linha:
+\begin{quote}
+\#\{appCopyright \$ appSettings master\}
+\end{quote}
+
+\subsection{Criando Forms}
+\label{sec:orgheadline5}
+Fazemos algumas mudanças no Handler:
+
+\begin{verbatim}
+module Handler.PostNew where
+
+import Import
+import Yesod.Form.Bootstrap3
+
+data BlogPost = BlogPost
+	{ title :: Text
+	}
+
+blogPostForm :: AForm Handler BlogPost
+blogPostForm = BlogPost
+	    <$> areq textField (bfs ("Title" :: Text)) Nothing
+
+getPostNewR :: Handler Html
+getPostNewR = do
+    (widget, enctype) <- generateFormPost $ renderBootstrap3 BootstrapBasicForm blogPostForm
+    defaultLayout $ do
+	$(widgetFile "posts/new")
+\end{verbatim}
+
+E também algumas mudanças no template:
+
+\begin{verbatim}
+<h1> Create a post!
+
+<form method=post action=@{PostNewR} enctype=#{enctype}
+  ^{widget}
+  <button class="btn btn-default">Create Post!
+\end{verbatim}
+
+Agora precisamos de algo para gerar novos blogposts. Adicionaremos dois pacotes em nosso myBlog.cabal.
+Na guia \textbf{build-depends}, ao fim dela adicione:
+\begin{quote}
+, markdown \\
+, yesod-text-markdown
+\end{quote}
+\end{document}
