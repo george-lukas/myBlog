@@ -1,7 +1,7 @@
 * Introdução
 #+BEGIN_VERSE
 Neste tutorial faremos um blog usando o Yesod Frameword.\\
-Yesod é um framework web Haskell para o desenvolvimento produtivo de, RESTful, aplicação web de tipo
+Yesod é um framework web Haskell para o desenvolvimento produtivo de RESTful, uma aplicação web de tipo
 seguro e de alta performance.
 #+END_VERSE
 
@@ -13,7 +13,7 @@ seguro e de alta performance.
 - yesod-bin
 ** Criando um novo projeto
 #+BEGIN_VERSE
-Dado que o psql e o stack foi devidamente instalado, criamos um novo projeto usando o Stack, cuja a\\
+Com tudo devidamente instalado, criamos um novo projeto usando o Stack, cuja a\\
 sintaxe é /stack new <project name> <template>/.\\
 Para esse caso:
 #+END_VERSE
@@ -206,8 +206,7 @@ textarea {
 
 ** Definindo rotas onde os blogpost serão gerados
 #+BEGIN_QUOTE
-Começamos adicionando um método para o construtor *PostNewR*.
-O caminho é, /config/routes.
+Começamos adicionando um método para o construtor /PostNewR/. Seu caminho é, /config/routes.
 #+END_QUOTE
 
 #+BEGIN_QUOTE
@@ -235,8 +234,8 @@ import Yesod.Text.Markdown ()
 #+END_SRC
 
 #+BEGIN_QUOTE
-Podemos agora remover nosso /data BlogPost/ e implementar nosso construtor, que será salva em um banco de dados.
-E nosso Handler fica assim:
+Podemos agora remover nosso /data BlogPost/ para implementar o nosso construtor, que será salva em um banco de dados.
+Nosso Handler ficará assim:
 #+END_QUOTE
 
 #+BEGIN_SRC haskell
@@ -268,7 +267,7 @@ postPostNewR = do
 #+END_SRC
 
 #+BEGIN_QUOTE
-Agora criaremos uma página que nos permite criar nos blogposts.
+Agora criaremos uma página que nos permite criar blogposts.
 No terminal digitamos:
 #+END_QUOTE
 
@@ -285,7 +284,7 @@ e editamos a seguinte linha como a seguir:
 - /posts/!#BlogPostId PostDetailsR GET
 
 #+BEGIN_QUOTE
-Editaremos agora a página para que possamos salvar as postagens.
+Agora editaremos o construtor /PostDetails.hs/ para que a página salve as postagens.
 #+END_QUOTE
 
 #+BEGIN_SRC haskell
@@ -302,7 +301,7 @@ getPostDetailsR blogPostId = do
 
 #+BEGIN_QUOTE
 Criamos também uma nova pasta e um novo arquivo para essas manipulações.
-/templates/postDetails/post.hamlet . E lá digitamos.
+/templates/postDetails/post.hamlet. E lá digitamos.
 #+END_QUOTE
 
 #+BEGIN_SRC html
@@ -313,7 +312,7 @@ Criamos também uma nova pasta e um novo arquivo para essas manipulações.
 #+END_SRC
 
 #+BEGIN_QUOTE
-Em PostNew.hs redirecionaremos quando inserirmos um blogpost, seremos redirecionado para aquela página.
+Em PostNew.hs queremos que o usuário seja redirecionado quando inserirmos um blogpost, redirecionado-o para página de postagens.
 #+END_QUOTE
 
 #+BEGIN_SRC haskell
@@ -328,8 +327,7 @@ postPostNewR = do
 #+END_SRC
 
 #+BEGIN_QUOTE
-Agora indexaremos tudo na página inicial.
-Editamos o arquivo routes.
+Agora indexaremos tudo na página inicial, para isso editamos o arquivo /config/routes.
 #+END_QUOTE
 
 - / HomeR GET
@@ -364,7 +362,7 @@ Seu caminho é /templates/posts/index.hamlet
 #+END_QUOTE
 
 #+BEGIN_SRC html
-<h1> UFU-6001 Posts
+<h1> All Posts
 
 <div .jumbotron>
   <ul>
