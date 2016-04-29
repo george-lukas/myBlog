@@ -1,1 +1,2 @@
- 
+parei na parte onde tem que instalar o yesod-text-markdown
+18:20 do video
